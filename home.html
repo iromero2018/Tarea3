@@ -15,7 +15,6 @@ El Departamento de Sucre está conformado por <b>26 municipios</b> y 275 corregi
 	.bar {
 	  fill: steelblue;
 	}
-
 	.bar:hover {
 	  fill: brown;
 	}
@@ -32,7 +31,6 @@ Iván Rodrigo Romero Flórez | Código: 201717315 | Correo: ir.romero@uniandes.e
 Universidad de los Andes | Maestría en Ingeniería de la Información
 </p>
 <script>
-
 var svg = d3.select("svg"),
 margin = {
 	top: 20,
@@ -43,16 +41,26 @@ margin = {
 width = +svg.attr("width") - margin.left - margin.right,
 height = +svg.attr("height") - margin.top - margin.bottom,
 g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 var parseTime = d3.timeParse("%d-%b-%y");
-
 var x = d3.scaleBand()
 	.rangeRound([0, width])
 	.padding(0.1);
 	
+let tooltip ;
+
+ tooltip = svg.append("g")
+    .append("text")
+    .style("font-size", "10pt")
+    .style("font-family", "Arial")  
+    .style("color", "red")
+    .style("background","none repeat scroll 0 0 #ffffff")
+    .style("border","2px solid #6F257")
+    .style("padding","14px")
+    .style("text-aling","center")
+    .attr("x", -100);
+
 var y = d3.scaleLinear()
 	.rangeRound([height, 0]);
-
 d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").then(function (data) {
 	x.domain(data.map(function (d) {
 			return d.Nombre;
@@ -60,7 +68,6 @@ d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").t
 	y.domain([0, d3.max(data, function (d) {
 				return Number(d.Area);
 			})]);
-
 	g.append("g")
 	.attr("class", "axis")
 	.attr("transform", "translate(0," + height + ")")
@@ -81,10 +88,33 @@ d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").t
 	.attr("text-anchor", "end")
 	.text("Km2");
 
+
 	g.selectAll(".bar")
 	.data(data)
 	.enter().append("rect")
 	.attr("class", "bar")
+ 
+    .on("mouseover", function(d) {
+          console.log(d);
+          d3.select(this)
+          .attr("fill", "red")
+          tooltip
+            .attr("x", 750)
+            .attr("y", 10)
+            .style("fill", "blue")
+            .style("font-weight", "bold")
+            .text(`Área en KM2: ${d.Area} `);       
+      
+          console.log(tooltip.node());
+        })
+        .on("mouseout", function(d, i) {
+         console.log(d);
+         d3.select(this)
+        .style("color", "red")
+        
+        })
+
+
 	.attr("x", function (d) {
 		return x(d.Nombre);
 	})
@@ -93,8 +123,10 @@ d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").t
 	})
 	.attr("width", x.bandwidth())
 	.attr("height", function (d) {
-		return height - y(Number(d.Area));
+		return height - y(Number(d.Area))
+
+
+		;
 	});
 });
-
 </script>
