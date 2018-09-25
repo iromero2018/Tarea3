@@ -48,6 +48,8 @@ p {
 
 <script>
 
+data =   d3.json("https://www.datos.gov.co/resource/4h8j-xsyj.json")
+	
 function processedData() {
   const nested = d3.nest().key(d => d.subregiones).entries(data)
   
@@ -107,7 +109,5 @@ yAxis = g => g
 height = 1000
 
 margin = ({top: 30, right: 10, bottom: 400, left: 50})
-
-data =   d3.json("https://www.datos.gov.co/resource/4h8j-xsyj.json")
 	
 </script>
