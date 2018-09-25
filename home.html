@@ -86,7 +86,7 @@ function processedData() {
 }
 
 //viewof curGeographyKey = DOM.select([...new Set(data.map(item => item.subregiones))])	
-curGeographyKey = 0
+curGeographyKey = [0,0]
 	
 const filteredData = processedData().filter(d => d.key === curGeographyKey)[0].values
 	
