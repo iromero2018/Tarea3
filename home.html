@@ -85,7 +85,7 @@ function processedData() {
   return processedGeos
 }
 
-viewof curGeographyKey = DOM.select([...new Set(data.map(item => item.subregiones))])	
+viewof curGeographyKey = d3.select([...new Set(data.map(item => item.subregiones))])	
 	
 const filteredData = processedData().filter(d => d.key === curGeographyKey)[0].values
 	
