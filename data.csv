@@ -1,28 +1,6 @@
 Subregiones,N°,Nombre,Área en km2,% ocupación,N° Corregimientos
-MONTES DE MARIA,1,Sincelejo,303.03,2.78,21
-MONTES DE MARIA,2,Chalán,97.59,0.89,1
-MONTES DE MARIA,3,Ovejas,465.77,4.27,11
-MONTES DE MARIA,4,Morroa,169.7,1.55,10
-MONTES DE MARIA,5,Coloso,161.94,1.48,4
-GOLFO DEL MORROSQUILLO,6,Coveñas,55.99,0.51,4
-GOLFO DEL MORROSQUILLO,7,Palmito,173.78,1.59,4
-GOLFO DEL MORROSQUILLO,8,Santiago De Tolú,365.28,3.35,6
-GOLFO DEL MORROSQUILLO,9,Tolú Viejo,263.15,2.41,10
-GOLFO DEL MORROSQUILLO,10,San Onofre,"1,080.58",9.9,23
-SAN JORGE,11,San Marcos,"1,080.69",9.9,11
-SAN JORGE,12,San Benito Abad,"1,393",12.76,21
-SAN JORGE,13,La Unión,234.23,2.15,5
-SAN JORGE,14,Caimito,483.23,4.43,7
-MOJANA,15,Guaranda,361.69,3.31,8
-MOJANA,16,Majagual,952.31,8.72,26
-MOJANA,17,Sucre,"1,062.92",9.74,38
-SABANA,18,Buenavista,114.99,1.05,1
-SABANA,19,Corozal,275.53,2.52,10
-SABANA,20,El Roble,212.89,1.95,11
-SABANA,21,Galeras,306.23,2.81,5
-SABANA,22,Los Palmitos,219.07,2.01,6
-SABANA,23,Sampués,222.89,2.04,14
-SABANA,24,San Juan de Betulia,230.03,2.11,5
-SABANA,25,San Pedro,217.4,1.99,3
-SABANA,26,San Luis De Sincé,413.09,3.78,10
-Total,,,"10,917",100,275
+MONTES DE MARIA,5,Sincelejo-Chalán-Ovejas-Morroa-Coloso,1198.03,10.97,47   
+GOLFO DEL MORROSQUILLO,5,Coveñas-Palmito-Santiago De Tolú-Tolú Viejo-San Onofre,1938.78,17.76,47
+SAN JORGE,4,San Marcos-San Benito Abad-La Unión-Caimito,3191.15,29.24,44
+MOJANA,3,Guaranda-Majagual-Sucre,2376.92,21.77,72
+SABANA,9,Buenavista-Corozal-El Roble-Galeras-Los Palmitos-Sampués-San Juan de Betulia-San Pedro-San Luis De Sincé,2212.12,20.26,65
