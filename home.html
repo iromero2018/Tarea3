@@ -34,7 +34,7 @@ var y = d3.scaleLinear()
 
 d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").then(function (data) {
 	x.domain(data.map(function (d) {
-			return d.Run;
+			return d.Nombre;
 		}));
 	y.domain([0, d3.max(data, function (d) {
 				return Number(d.Speed);
@@ -59,7 +59,7 @@ d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").t
 	.enter().append("rect")
 	.attr("class", "bar")
 	.attr("x", function (d) {
-		return x(d.Run);
+		return x(d.Nombre);
 	})
 	.attr("y", function (d) {
 		return y(Number(d.Speed));
