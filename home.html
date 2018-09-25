@@ -92,9 +92,7 @@ options = [
   ["blue", "A case of"]
 ]
 
-viewof choice = html`<select>${options.map(([value, label]) => `
-  <option value="${value}">${label}</option>`)
-}</select>`
+viewof choice = html`<select>${options.map(([value, label]) => `<option value="${value}">${label}</option>`)}</select>`
 	
 const filteredData = processedData().filter(d => d.key === curGeographyKey)[0].values
 	
