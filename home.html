@@ -76,9 +76,7 @@ filteredData = processedData
   [0].values
 
 function processedData = {
-  const nested = d3.nest()
-    .key(d => d.subregiones)
-    .entries(data)
+  const nested = d3.nest().key(d => d.subregiones).entries(data)
   
   const processedGeos = nested.map(region => 
    {
