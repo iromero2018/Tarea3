@@ -85,7 +85,12 @@ function processedData() {
   return processedGeos
 }
 
-d3 viewof curGeographyKey = DOM.select([...new Set(data.map(item => item.subregiones))])	
+//viewof curGeographyKey = DOM.select([...new Set(data.map(item => item.subregiones))])	
+viewof choice =  html `< select > 
+  < option  value = " red " > Pinte en rojo </ option > 
+  < option  value = " green " > No es fácil </ option > 
+  < option  value = " blue " > A case of < / option > 
+</ select >`
 	
 const filteredData = processedData().filter(d => d.key === curGeographyKey)[0].values
 	
