@@ -58,7 +58,6 @@ d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").t
 	.data(data)
 	.enter().append("rect")
 	.attr("class", "bar")
-	.attr("transform", "rotate(-90)")
 	.attr("x", function (d) {
 		return x(d.Nombre);
 	})
