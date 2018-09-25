@@ -83,7 +83,7 @@ function processedData() {
   return processedGeos
 }
 	
-const filteredData = processedData.filter(d => d.key === curGeographyKey)[0].values
+const filteredData = processedData().filter(d => d.key === curGeographyKey)[0].values
 	
 x = d3.scaleBand()
     .domain(filteredData.map(d => d.nombre))
