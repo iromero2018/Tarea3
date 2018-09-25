@@ -1,135 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>D3 Demo: Axes</title>
-		<script type="text/javascript" src="../d3/d3.v3.min.js"></script>
-		<style type="text/css">
-			
-			.axis path,
-			.axis line {
-				fill: none;
-				stroke: black;
-				shape-rendering: crispEdges;
-			}
-			
-			.axis text {
-				font-family: sans-serif;
-				font-size: 11px;
-			}
+<meta charset="utf-8">
+<style>
 
-		</style>
-	</head>
-	<body>
-		<script type="text/javascript">
+text {
+  font: 10px sans-serif;
+}
 
-			//Width and height
-			var w = 500;
-			var h = 300;
-			var padding = 30;
-			
-			/*
-			//Static dataset
-			var dataset = [
-							[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
-							[410, 12], [475, 44], [25, 67], [85, 21], [220, 88],
-							[600, 150]
-						  ];
-			*/
-			
-			//Dynamic, random dataset
-			var dataset = [];					//Initialize empty array
-			var numDataPoints = 50;				//Number of dummy data points to create
-			var xRange = Math.random() * 1000;	//Max range of new x values
-			var yRange = Math.random() * 1000;	//Max range of new y values
-			for (var i = 0; i < numDataPoints; i++) {					//Loop numDataPoints times
-				var newNumber1 = Math.round(Math.random() * xRange);	//New random integer
-				var newNumber2 = Math.round(Math.random() * yRange);	//New random integer
-				dataset.push([newNumber1, newNumber2]);					//Add new number to array
-			}
+rect.background {
+  fill: white;
+}
 
-			//Create scale functions
-			var xScale = d3.scale.linear()
-								 .domain([0, d3.max(dataset, function(d) { return d[0]; })])
-								 .range([padding, w - padding * 2]);
+.axis {
+  shape-rendering: crispEdges;
+}
 
-			var yScale = d3.scale.linear()
-								 .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-								 .range([h - padding, padding]);
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+}
 
-			var rScale = d3.scale.linear()
-								 .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-								 .range([2, 5]);
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
 
-			var formatAsPercentage = d3.format(".1%");
+var margin = {top: 30, right: 120, bottom: 0, left: 120},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-			//Define X axis
-			var xAxis = d3.svg.axis()
-							  .scale(xScale)
-							  .orient("bottom")
-							  .ticks(5)
-							  .tickFormat(formatAsPercentage);
+var x = d3.scale.linear()
+    .range([0, width]);
 
-			//Define Y axis
-			var yAxis = d3.svg.axis()
-							  .scale(yScale)
-							  .orient("left")
-							  .ticks(5)
-							  .tickFormat(formatAsPercentage);
+var barHeight = 20;
 
-			//Create SVG element
-			var svg = d3.select("body")
-						.append("svg")
-						.attr("width", w)
-						.attr("height", h);
+var color = d3.scale.ordinal()
+    .range(["steelblue", "#ccc"]);
 
-			//Create circles
-			svg.selectAll("circle")
-			   .data(dataset)
-			   .enter()
-			   .append("circle")
-			   .attr("cx", function(d) {
-			   		return xScale(d[0]);
-			   })
-			   .attr("cy", function(d) {
-			   		return yScale(d[1]);
-			   })
-			   .attr("r", function(d) {
-			   		return rScale(d[1]);
-			   });
+var duration = 750,
+    delay = 25;
 
-			/*
-			//Create labels
-			svg.selectAll("text")
-			   .data(dataset)
-			   .enter()
-			   .append("text")
-			   .text(function(d) {
-			   		return d[0] + "," + d[1];
-			   })
-			   .attr("x", function(d) {
-			   		return xScale(d[0]);
-			   })
-			   .attr("y", function(d) {
-			   		return yScale(d[1]);
-			   })
-			   .attr("font-family", "sans-serif")
-			   .attr("font-size", "11px")
-			   .attr("fill", "red");
-		  	*/
-			
-			//Create X axis
-			svg.append("g")
-				.attr("class", "axis")
-				.attr("transform", "translate(0," + (h - padding) + ")")
-				.call(xAxis);
-			
-			//Create Y axis
-			svg.append("g")
-				.attr("class", "axis")
-				.attr("transform", "translate(" + padding + ",0)")
-				.call(yAxis);
+var partition = d3.layout.partition()
+    .value(function(d) { return d.size; });
 
-		</script>
-	</body>
-</html>
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("top");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height)
+    .on("click", up);
+
+svg.append("g")
+    .attr("class", "x axis");
+
+svg.append("g")
+    .attr("class", "y axis")
+  .append("line")
+    .attr("y1", "100%");
+
+d3.json("readme.json", function(error, root) {
+  if (error) throw error;
+
+  partition.nodes(root);
+  x.domain([0, root.value]).nice();
+  down(root, 0);
+});
+
+function down(d, i) {
+  if (!d.children || this.__transition__) return;
+  var end = duration + d.children.length * delay;
+
+  // Mark any currently-displayed bars as exiting.
+  var exit = svg.selectAll(".enter")
+      .attr("class", "exit");
+
+  // Entering nodes immediately obscure the clicked-on bar, so hide it.
+  exit.selectAll("rect").filter(function(p) { return p === d; })
+      .style("fill-opacity", 1e-6);
+
+  // Enter the new bars for the clicked-on data.
+  // Per above, entering bars are immediately visible.
+  var enter = bar(d)
+      .attr("transform", stack(i))
+      .style("opacity", 1);
+
+  // Have the text fade-in, even though the bars are visible.
+  // Color the bars as parents; they will fade to children if appropriate.
+  enter.select("text").style("fill-opacity", 1e-6);
+  enter.select("rect").style("fill", color(true));
+
+  // Update the x-scale domain.
+  x.domain([0, d3.max(d.children, function(d) { return d.value; })]).nice();
+
+  // Update the x-axis.
+  svg.selectAll(".x.axis").transition()
+      .duration(duration)
+      .call(xAxis);
+
+  // Transition entering bars to their new position.
+  var enterTransition = enter.transition()
+      .duration(duration)
+      .delay(function(d, i) { return i * delay; })
+      .attr("transform", function(d, i) { return "translate(0," + barHeight * i * 1.2 + ")"; });
+
+  // Transition entering text.
+  enterTransition.select("text")
+      .style("fill-opacity", 1);
+
+  // Transition entering rects to the new x-scale.
+  enterTransition.select("rect")
+      .attr("width", function(d) { return x(d.value); })
+      .style("fill", function(d) { return color(!!d.children); });
+
+  // Transition exiting bars to fade out.
+  var exitTransition = exit.transition()
+      .duration(duration)
+      .style("opacity", 1e-6)
+      .remove();
+
+  // Transition exiting bars to the new x-scale.
+  exitTransition.selectAll("rect")
+      .attr("width", function(d) { return x(d.value); });
+
+  // Rebind the current node to the background.
+  svg.select(".background")
+      .datum(d)
+    .transition()
+      .duration(end);
+
+  d.index = i;
+}
+
+function up(d) {
+  if (!d.parent || this.__transition__) return;
+  var end = duration + d.children.length * delay;
+
+  // Mark any currently-displayed bars as exiting.
+  var exit = svg.selectAll(".enter")
+      .attr("class", "exit");
+
+  // Enter the new bars for the clicked-on data's parent.
+  var enter = bar(d.parent)
+      .attr("transform", function(d, i) { return "translate(0," + barHeight * i * 1.2 + ")"; })
+      .style("opacity", 1e-6);
+
+  // Color the bars as appropriate.
+  // Exiting nodes will obscure the parent bar, so hide it.
+  enter.select("rect")
+      .style("fill", function(d) { return color(!!d.children); })
+    .filter(function(p) { return p === d; })
+      .style("fill-opacity", 1e-6);
+
+  // Update the x-scale domain.
+  x.domain([0, d3.max(d.parent.children, function(d) { return d.value; })]).nice();
+
+  // Update the x-axis.
+  svg.selectAll(".x.axis").transition()
+      .duration(duration)
+      .call(xAxis);
+
+  // Transition entering bars to fade in over the full duration.
+  var enterTransition = enter.transition()
+      .duration(end)
+      .style("opacity", 1);
+
+  // Transition entering rects to the new x-scale.
+  // When the entering parent rect is done, make it visible!
+  enterTransition.select("rect")
+      .attr("width", function(d) { return x(d.value); })
+      .each("end", function(p) { if (p === d) d3.select(this).style("fill-opacity", null); });
+
+  // Transition exiting bars to the parent's position.
+  var exitTransition = exit.selectAll("g").transition()
+      .duration(duration)
+      .delay(function(d, i) { return i * delay; })
+      .attr("transform", stack(d.index));
+
+  // Transition exiting text to fade out.
+  exitTransition.select("text")
+      .style("fill-opacity", 1e-6);
+
+  // Transition exiting rects to the new scale and fade to parent color.
+  exitTransition.select("rect")
+      .attr("width", function(d) { return x(d.value); })
+      .style("fill", color(true));
+
+  // Remove exiting nodes when the last child has finished transitioning.
+  exit.transition()
+      .duration(end)
+      .remove();
+
+  // Rebind the current parent to the background.
+  svg.select(".background")
+      .datum(d.parent)
+    .transition()
+      .duration(end);
+}
+
+// Creates a set of bars for the given data node, at the specified index.
+function bar(d) {
+  var bar = svg.insert("g", ".y.axis")
+      .attr("class", "enter")
+      .attr("transform", "translate(0,5)")
+    .selectAll("g")
+      .data(d.children)
+    .enter().append("g")
+      .style("cursor", function(d) { return !d.children ? null : "pointer"; })
+      .on("click", down);
+
+  bar.append("text")
+      .attr("x", -6)
+      .attr("y", barHeight / 2)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d.name; });
+
+  bar.append("rect")
+      .attr("width", function(d) { return x(d.value); })
+      .attr("height", barHeight);
+
+  return bar;
+}
+
+// A stateful closure for stacking bars horizontally.
+function stack(i) {
+  var x0 = 0;
+  return function(d) {
+    var tx = "translate(" + x0 + "," + barHeight * i * 1.2 + ")";
+    x0 += x(d.value);
+    return tx;
+  };
+}
+
+</script>
