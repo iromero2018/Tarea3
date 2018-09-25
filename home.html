@@ -86,13 +86,7 @@ function processedData() {
 }
 
 //viewof curGeographyKey = DOM.select([...new Set(data.map(item => item.subregiones))])	
-options = [
-  ["red", "Paint it red"],
-  ["green", "Not easy being"],
-  ["blue", "A case of"]
-]
-
-viewof choice = html`<select>${options.map(([value, label]) => `<option value="${value}">${label}</option>`)}</select>`
+curGeographyKey = 0
 	
 const filteredData = processedData().filter(d => d.key === curGeographyKey)[0].values
 	
