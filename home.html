@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<svg width="960" height="500"></svg>
+<svg width="960" height="600"></svg>
 <style>
 	.bar {
 	  fill: steelblue;
@@ -17,7 +17,7 @@ var svg = d3.select("svg"),
 margin = {
 	top: 20,
 	right: 20,
-	bottom: 150,
+	bottom: 250,
 	left: 50
 },
 width = +svg.attr("width") - margin.left - margin.right,
@@ -47,7 +47,7 @@ d3.csv("https://raw.githubusercontent.com/iromero2018/Tarea3/master/data.csv").t
 	.attr("transform", "translate(0," + height + ")")
 	.call(d3.axisBottom(x))
       	.selectAll("text")	
-        .style("text-anchor", "start")
+        .style("text-anchor", "end")
         .attr("dx", "-6.8em")
         .attr("dy", ".15em")
         .attr("transform", "rotate(-90)");
